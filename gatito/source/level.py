@@ -25,7 +25,7 @@ class Level:
                 
                 match column:
                     case 'P':
-                        Player((x,y), self.visible_sprites)
+                        Player((x,y), self.visible_sprites, self.active_sprites)
                     case 'X':
                         Tile((x,y), self.visible_sprites)
 
@@ -33,5 +33,5 @@ class Level:
 
     def run(self):
         # run the entire game (level)
-        
+        self.active_sprites.update()
         self.visible_sprites.draw(self.display_surface)
