@@ -25,11 +25,9 @@ class Level:
                 
                 match column:
                     case 'P':
-                        Player((x,y), self.visible_sprites, self.active_sprites)
+                        Player((x,y), self.visible_sprites, self.active_sprites, colliders=self.collision_sprites)
                     case 'X':
-                        Tile((x,y), self.visible_sprites)
-
-
+                        Tile((x,y), self.visible_sprites, self.collision_sprites)
 
     def run(self):
         # run the entire game (level)
