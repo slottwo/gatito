@@ -17,8 +17,7 @@ LEVEL_MAP = [
 
 # colors
 
-BG_COLOR = (0,) * 3
-PLAYER_COLOR = (255,) * 3
+BG_COLOR = (255,) * 3
 TILE_COLOR = (128,) * 3
 
 # camera

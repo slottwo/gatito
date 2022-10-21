@@ -9,7 +9,8 @@ def import_folder(path: str) -> list[pygame.Surface]:
     for _, __, files in walk(path):
         for img in files:
             surface_list.append(
-                pygame.image.load(join(path, img)).convert_alpha())
+                pygame.image.load(join(path, img)).convert_alpha()
+            )
 
     return surface_list
 

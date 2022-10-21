@@ -2,18 +2,21 @@ import pygame
 from settings import *
 from tools import *
 
+CAT_STATUS = ['right_jump', 'left_jump', 'right_fall', 'left_fall',
+              'right_idle', 'left_idle', 'right_walk', 'left_walk']
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, topleft: tuple[int], *groups: pygame.sprite.Group, colliders: pygame.sprite.Group):
         super().__init__(groups)
-        
+
         self.import_assets()
-        
+        self.status = 'left_idle'
+        self.frame_index = 0
+
         # geneal setup
-        self.image = pygame.Surface((TILE_SIZE // 2, TILE_SIZE))
-        self.image.fill(PLAYER_COLOR)
+        self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=topleft)
-        self.colliders = colliders
 
         # move player
         self.direction = pygame.math.Vector2()
@@ -22,18 +25,15 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.8
         self.on_floor = False
 
+        self.colliders = colliders
+
     def import_assets(self):
-        state_list = ['right_jump', 'left_jump', 'right_fall', 'left_fall',
-                       'right_idle', 'left_idle', 'right_walk', 'left_walk', ]
 
-        self.animations = dict(((state, []) for state in state_list))
+        self.animations = dict(((status, []) for status in CAT_STATUS))
 
-        for animation in self.animations.keys:
-            relative_path = 'gatito/assets/character' + animation
+        for animation in self.animations.keys():
+            relative_path = 'gatito/assets/graphics/character/' + animation
             self.animations[animation] = import_folder(relative_path)
-            
-            if not self.animations[animation]:
-                raise Exception("Character sprites not found.")
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -74,6 +74,20 @@ class Player(pygame.sprite.Sprite):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
 
+    def animate(self, x):
+        new_direction = ['left', self.status.split('_')[0], 'right']
+        new_direction = new_direction[int(self.direction.x) + 1]
+        if self.on_floor:
+            new_status = '_idle' if self.direction.x == 0 else '_walk'
+        else:
+            new_status = '_jump' if self.direction.y < 0 else '_fall'
+
+        self.status = new_direction + new_status
+        print(self.status)
+
+        self.frame_index += x % 4
+        self.image = self.animations[self.status][int(self.frame_index)]
+
     def update(self):
         self.input()
 
@@ -82,5 +96,9 @@ class Player(pygame.sprite.Sprite):
         self.horizontal_collisions()
 
         # vertical movement
-        self.apply_gravity()
+        if not self.on_floor:
+            self.apply_gravity()
         self.vertical_collisions()
+        
+        # animation
+        self.animate(0)
