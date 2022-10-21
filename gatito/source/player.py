@@ -1,15 +1,15 @@
 import pygame
 from settings import *
+from tools import *
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, topleft: tuple[int], *groups: pygame.sprite.Group, colliders: pygame.sprite.Group):
         super().__init__(groups)
-
-        # image = pygame.image.load('gatito/assets/sprite.png')
-        # self.size = (40, 64)
-        # self.image = pygame.transform.scale(image, self.size)
-
+        
+        self.import_assets()
+        
+        # geneal setup
         self.image = pygame.Surface((TILE_SIZE // 2, TILE_SIZE))
         self.image.fill(PLAYER_COLOR)
         self.rect = self.image.get_rect(topleft=topleft)
@@ -21,6 +21,19 @@ class Player(pygame.sprite.Sprite):
         self.jump_speed = 16
         self.gravity = 0.8
         self.on_floor = False
+
+    def import_assets(self):
+        state_list = ['right_jump', 'left_jump', 'right_fall', 'left_fall',
+                       'right_idle', 'left_idle', 'right_walk', 'left_walk', ]
+
+        self.animations = dict(((state, []) for state in state_list))
+
+        for animation in self.animations.keys:
+            relative_path = 'gatito/assets/character' + animation
+            self.animations[animation] = import_folder(relative_path)
+            
+            if not self.animations[animation]:
+                raise Exception("Character sprites not found.")
 
     def input(self):
         keys = pygame.key.get_pressed()
