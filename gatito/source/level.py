@@ -43,12 +43,12 @@ class Level:
                         Tile((x, y), self.visible_sprites,
                              self.collision_sprites)
 
-    def run(self):
+    def run(self, delta_time: float):
         """Run the entire game (level).
         """
 
         # Game logic
-        self.active_sprites.update()
+        self.active_sprites.update(delta_time)
 
         # Game graphics
         self.visible_sprites.draw(self.display_surface)

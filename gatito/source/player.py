@@ -17,23 +17,29 @@ class Player(pygame.sprite.Sprite):
         # animation setup
         self.status = 'left_idle'
         self.frame_index = 0
-        self.animation_speed = 0.05
+        self.animation_speed = 4  # frame per sec
 
         # geneal setup
         self.image = self.animations[self.status][self.frame_index]
-        self.rect = self.image.get_rect(topleft=topleft)
+        x, y = topleft
+        w, h = self.image.get_size()
+        initial_pos = x + TILE_SIZE - w, y + TILE_SIZE - h
+        self.rect = self.image.get_rect(topleft=initial_pos)
 
         # move player
         self.direction = pygame.math.Vector2()
-        self.speed = 8
-        self.jump_speed = -16
-        self.gravity = 0.8
+        # blocks per sec
+        self.speed = 2 * TILE_SIZE
+        self.jump_speed = -4 * TILE_SIZE
+        self.gravity = 0.2 * TILE_SIZE
+        self.terminal_speed = 8 * TILE_SIZE
+        self.position = pygame.math.Vector2(self.rect.topleft)
         self.on_floor = False
 
         self.colliders = colliders
 
-    def import_assets(self):
-
+    def import_assets(self) -> None:
+        self.animations: dict[str, list[pygame.surface.Surface]]
         self.animations = dict(((status, []) for status in STATUS))
 
         for animation in self.animations.keys():
@@ -53,12 +59,14 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.on_floor:
             self.jump()
 
-    def apply_gravity(self):
-        self.direction.y += self.gravity
-        self.rect.y += self.direction.y
+    def apply_gravity(self, dt: float):
+        if self.direction.y < self.terminal_speed:
+            self.direction.y += self.gravity  # * dt
+        self.position.y += self.direction.y * dt
+        self.rect.y = self.position.y
 
     def jump(self):
-        self.direction.y = self.jump_speed
+        self.direction.y = self.jump_speed  # * dt
 
     def horizontal_collisions(self):
         for sprite in self.colliders.sprites():
@@ -82,37 +90,38 @@ class Player(pygame.sprite.Sprite):
         if self.on_floor and self.direction.y:
             self.on_floor = False
 
-    def animate(self):
+    def animate(self, dt: float):
 
         # update status
 
         new_status_direction = ['left', self.status.split('_')[0], 'right']
         new_status_direction = new_status_direction[int(self.direction.x) + 1]
 
-        if self.on_floor:
-            new_status = 'idle' if self.direction.x == 0 else 'walk'
-        else:
-            new_status = 'jump' if self.direction.y < 0 else 'fall'
+        # if self.on_floor:
+        new_status = 'idle' if self.direction.x == 0 else 'walk'
+        # else:
+        #     new_status = 'jump' if self.direction.y < 0 else 'fall'
 
         self.status = f'{new_status_direction}_{new_status}'
 
         # update index
 
-        self.frame_index += self.animation_speed
+        self.frame_index += self.animation_speed * dt
         self.frame_index %= len(self.animations[self.status])
 
         self.image = self.animations[self.status][int(self.frame_index)]
 
-    def update(self):
+    def update(self, dt: float):
         self.input()
 
         # horizontal movement
-        self.rect.x += self.direction.x * self.speed
+        self.position.x += self.direction.x * self.speed * dt
+        self.rect.x = self.position.x
         self.horizontal_collisions()
 
         # vertical movement
-        self.apply_gravity()
+        # self.apply_gravity(dt)
         self.vertical_collisions()
 
         # animation
-        self.animate()
+        self.animate(dt)
