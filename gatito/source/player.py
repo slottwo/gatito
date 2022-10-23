@@ -2,17 +2,22 @@ import pygame
 from settings import *
 from tools import *
 
-CAT_STATUS = ['right_jump', 'left_jump', 'right_fall', 'left_fall',
-              'right_idle', 'left_idle', 'right_walk', 'left_walk']
+STATUS = ['right_jump', 'left_jump', 'right_fall', 'left_fall',
+          'right_idle', 'left_idle', 'right_walk', 'left_walk']
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, topleft: tuple[int], *groups: pygame.sprite.Group, colliders: pygame.sprite.Group):
+    def __init__(self, topleft: tuple[int],
+                 *groups: pygame.sprite.Group,
+                 colliders: pygame.sprite.Group):
         super().__init__(groups)
 
         self.import_assets()
+
+        # animation setup
         self.status = 'left_idle'
         self.frame_index = 0
+        self.animation_speed = 0.05
 
         # geneal setup
         self.image = self.animations[self.status][self.frame_index]
@@ -21,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         # move player
         self.direction = pygame.math.Vector2()
         self.speed = 8
-        self.jump_speed = 16
+        self.jump_speed = -16
         self.gravity = 0.8
         self.on_floor = False
 
@@ -29,7 +34,7 @@ class Player(pygame.sprite.Sprite):
 
     def import_assets(self):
 
-        self.animations = dict(((status, []) for status in CAT_STATUS))
+        self.animations = dict(((status, []) for status in STATUS))
 
         for animation in self.animations.keys():
             relative_path = 'gatito/assets/graphics/character/' + animation
@@ -46,7 +51,14 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
 
         if keys[pygame.K_SPACE] and self.on_floor:
-            self.direction.y = -self.jump_speed
+            self.jump()
+
+    def apply_gravity(self):
+        self.direction.y += self.gravity
+        self.rect.y += self.direction.y
+
+    def jump(self):
+        self.direction.y = self.jump_speed
 
     def horizontal_collisions(self):
         for sprite in self.colliders.sprites():
@@ -70,22 +82,25 @@ class Player(pygame.sprite.Sprite):
         if self.on_floor and self.direction.y:
             self.on_floor = False
 
-    def apply_gravity(self):
-        self.direction.y += self.gravity
-        self.rect.y += self.direction.y
+    def animate(self):
 
-    def animate(self, x):
-        new_direction = ['left', self.status.split('_')[0], 'right']
-        new_direction = new_direction[int(self.direction.x) + 1]
+        # update status
+
+        new_status_direction = ['left', self.status.split('_')[0], 'right']
+        new_status_direction = new_status_direction[int(self.direction.x) + 1]
+
         if self.on_floor:
-            new_status = '_idle' if self.direction.x == 0 else '_walk'
+            new_status = 'idle' if self.direction.x == 0 else 'walk'
         else:
-            new_status = '_jump' if self.direction.y < 0 else '_fall'
+            new_status = 'jump' if self.direction.y < 0 else 'fall'
 
-        self.status = new_direction + new_status
-        print(self.status)
+        self.status = f'{new_status_direction}_{new_status}'
 
-        self.frame_index += x % 4
+        # update index
+
+        self.frame_index += self.animation_speed
+        self.frame_index %= len(self.animations[self.status])
+
         self.image = self.animations[self.status][int(self.frame_index)]
 
     def update(self):
@@ -96,9 +111,8 @@ class Player(pygame.sprite.Sprite):
         self.horizontal_collisions()
 
         # vertical movement
-        if not self.on_floor:
-            self.apply_gravity()
+        self.apply_gravity()
         self.vertical_collisions()
-        
+
         # animation
-        self.animate(0)
+        self.animate()
