@@ -27,9 +27,13 @@ class Game:
         for sprite in self.level.active_sprites.sprites():
             if type(sprite) == Player:
                 player = sprite
+                break
+
+        print(*player.rect.size)
 
         previous_frame = 0
         previous_x = player.position.x
+        previous_y = player.position.y
 
         # initial time
         previous_time = time.perf_counter()
@@ -54,15 +58,21 @@ class Game:
 
             player_velocity_x = (player.position.x - previous_x) / delta_time
             previous_x = player.position.x
+            player_velocity_y = (player.position.y - previous_y) / delta_time
+            previous_y = player.position.y
 
-            debug('x:', round(player.position.x, 3), 'y:', player.position.y)
+            debug('x:', round(player.position.x, 3),
+                  'y:', round(player.position.y, 3))
             debug(player.status, y=24)
             debug('dt:', round(delta_time, 3), y=36)
             debug('dx/dt:', round(player_velocity_x), y=48)
+            debug('dy/dt:', round(player_velocity_y), y=60)
+            debug('x/tick:', round(player.direction.x), y=72)
+            debug('y/tick:', round(player.direction.y), y=84)
 
             # drawing logic
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(FPS)
 
 
 if __name__ == '__main__':
