@@ -1,6 +1,7 @@
-TILE_SIZE = 64
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+FPS = 60
+TILE_SIZE = 16
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 360
 
 LEVEL_MAP = [
     '                            ',
@@ -12,13 +13,13 @@ LEVEL_MAP = [
     ' XXXX       XX              ',
     ' XX    X  XXXX    XX  XX    ',
     '       X  XXXX    XX  XXX   ',
-    '    XXXX  XXXXXX  XX  XXXX  ',
-    'XXXXXXXX  XXXXXX  XX  XXXX  ']
+    '    XXXXX XXXXXX  XX  XXXX  ',
+    'XXXXXXXXXXXXXXXXXXXX  XXXX  ']
 
 # colors
 
-BG_COLOR = (255,) * 3
-TILE_COLOR = (128,) * 3
+BG_COLOR = 'Cyan'
+TILE_COLOR = 'Green'
 
 # camera
 
