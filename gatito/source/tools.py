@@ -15,6 +15,6 @@ def import_folder(path: str) -> list[pygame.Surface]:
     return surface_list
 
 
-# debug
-if __name__ == '__main__':
-    print(import_folder('gatito/assets/graphics/character/left_fall'))
+def scale(sprite: pygame.Surface, ratio: int):
+    new_size = [ratio * i for i in sprite.get_size()]
+    return pygame.transform.scale(sprite, new_size)

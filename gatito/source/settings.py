@@ -1,7 +1,7 @@
 FPS = 60
-TILE_SIZE = 16
-SCREEN_WIDTH = 640
-SCREEN_HEIGHT = 360
+TILE_SIZE = 64
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 704
 
 LEVEL_MAP = [
     '                            ',

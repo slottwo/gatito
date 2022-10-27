@@ -49,7 +49,7 @@ class Game:
                     sys.exit()
 
             self.screen.fill(BG_COLOR)
-            self.level.run(delta_time)
+            self.level.run()
 
             # debug
 
@@ -63,12 +63,12 @@ class Game:
 
             debug('x:', round(player.position.x, 3),
                   'y:', round(player.position.y, 3))
-            debug(player.status, y=24)
-            debug('dt:', round(delta_time, 3), y=36)
-            debug('dx/dt:', round(player_velocity_x), y=48)
-            debug('dy/dt:', round(player_velocity_y), y=60)
-            debug('x/tick:', round(player.direction.x), y=72)
-            debug('y/tick:', round(player.direction.y), y=84)
+            debug(player.status, y=2)
+            debug('dt:', round(delta_time, 3), y=3)
+            debug('dx/dt:', round(player_velocity_x), y=4)
+            debug('dy/dt:', round(player_velocity_y), y=5)
+            debug('x/tick:', round(player.direction.x), y=6)
+            debug('y/tick:', round(player.direction.y), y=7)
 
             # drawing logic
             pygame.display.update()

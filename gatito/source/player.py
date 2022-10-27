@@ -16,9 +16,12 @@ class Player(pygame.sprite.Sprite):
         self.import_assets()
 
         # animation setup
-        self.status = 'left_idle'
         self.frame_index = 0
-        self.animation_speed = 4  # frame per sec
+        self.animation_speed = 0.05  # frame per sec
+
+        self.status = 'left_idle'
+        self.on_floor = True
+        self.on_ceiling = False
 
         # geneal setup
         self.image = self.animations[self.status][self.frame_index]
@@ -31,11 +34,10 @@ class Player(pygame.sprite.Sprite):
         # move player
         self.position = pygame.math.Vector2(self.rect.topleft)
         self.direction = pygame.math.Vector2()
-        self.on_floor = True
-        self.speed = 2.5 * TILE_SIZE
-        self.jump_speed = -4 * TILE_SIZE
-        self.gravity = 7 * TILE_SIZE
-        self.terminal_speed = 5 * TILE_SIZE
+        self.speed = 4
+        self.jump_speed = -16
+        self.gravity = 0.8
+        self.terminal_speed = 20
 
         # other settings
         self.colliders = colliders
@@ -46,7 +48,11 @@ class Player(pygame.sprite.Sprite):
 
         for animation in self.animations.keys():
             relative_path = 'gatito/assets/graphics/character/' + animation
-            self.animations[animation] = import_folder(relative_path)
+
+            sprites = [scale(sprite, TILE_SIZE // 16)
+                       for sprite in import_folder(relative_path)]
+
+            self.animations[animation] = sprites
 
     def get_input(self):
         keys = pygame.key.get_pressed()
@@ -61,13 +67,28 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.on_floor:
             self.jump()
 
-    def apply_gravity(self, dt: float):
+    def change_attribute(self,
+                         speed: float = None,
+                         jump: float = None,
+                         gravity: float = None,
+                         terminal_speed: float = None):
+
+        if speed:
+            self.speed = speed
+        if jump:
+            self.jump_speed = jump
+        if gravity:
+            self.gravity = gravity
+        if terminal_speed:
+            self.terminal_speed = terminal_speed
+
+    def apply_gravity(self):
         if self.direction.y < self.terminal_speed:
-            self.direction.y += self.gravity * dt
+            self.direction.y += self.gravity 
         else:
             self.direction.y = self.terminal_speed
 
-        self.position.y += self.direction.y * dt
+        self.position.y += self.direction.y 
         self.rect.y = self.position.y
 
     def jump(self):
@@ -97,18 +118,21 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
+                    self.on_ceiling = True
                 self.position.y = self.rect.top
 
-        if self.on_floor and self.direction.y:
+        if self.on_floor and self.direction.y < 0 or self.direction.y > 1:
             self.on_floor = False
+        if self.on_ceiling and self.direction.y > 0:
+            self.on_ceiling = False
 
-    def get_status(self, dt: float):
+    def get_status(self):
         new_status_direction = ['left', self.status.split('_')[0], 'right']
         new_status_direction = new_status_direction[int(self.direction.x) + 1]
 
         if self.direction.y < 0:
             new_status = 'jump'
-        elif self.direction.y > dt * self.gravity:
+        elif self.direction.y > self.gravity :
             new_status = 'fall'
         elif self.direction.x:
             new_status = 'walk'
@@ -117,31 +141,31 @@ class Player(pygame.sprite.Sprite):
 
         self.status = new_status_direction + '_' + new_status
 
-    def animate(self, dt: float):
-        
+    def animate(self):
+
         # update status
-        
-        self.get_status(dt)
-        
+
+        self.get_status()
+
         # update index
 
-        self.frame_index += self.animation_speed * dt
+        self.frame_index += self.animation_speed 
         self.frame_index %= len(self.animations[self.status])
 
         self.image = self.animations[self.status][int(self.frame_index)]
 
-    def update(self, dt: float):
+    def update(self):
 
         self.get_input()
 
         # horizontal movement
-        self.position.x += self.direction.x * self.speed * dt
+        self.position.x += self.direction.x * self.speed 
         self.rect.x = self.position.x
         self.horizontal_collisions()
 
         # vertical movement
-        self.apply_gravity(dt)
+        self.apply_gravity()
         self.vertical_collisions()
 
         # animation
-        self.animate(dt)
+        self.animate()
