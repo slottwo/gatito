@@ -4,6 +4,12 @@ from settings import *
 from level import Level
 
 
+try:
+    assert sys.version_info >= (3, 10)
+except AssertionError:
+    print('Unsupported Python version. Please, run with Python 3.10.x or newer')
+    sys.exit(1)
+
 class Game:
     def __init__(self) -> None:
         """Start and setup the Game. Init the game engine, set display, clock, 
