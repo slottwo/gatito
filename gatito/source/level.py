@@ -3,6 +3,7 @@ from settings import *
 # from debug import debug
 from tile import Tile
 from player import Player
+from item import Item
 
 
 class Level:
@@ -65,6 +66,8 @@ class Level:
                         Tile('rock/bot_right', (x,y), self.visible_sprites, self.collision_sprites)
                     case '15':
                         Tile('rock/bot', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '16':
+                        Item('fish', (x,y), self.visible_sprites, self.collision_sprites)
 
     def run(self):
 
