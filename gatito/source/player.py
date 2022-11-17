@@ -50,11 +50,17 @@ class Player(pygame.sprite.Sprite):
         self.colliders = colliders
 
     def load_assets() -> dict[str, SpriteStripAnim]:
+        """_summary_
+
+        Returns:
+            dict[str, SpriteStripAnim]: _description_
+        """
+
         return {
             'idle': SpriteStripAnim(ASSETS_PATH + 'idle', (0, 0, 16, 16), True),
             'walk': SpriteStripAnim(ASSETS_PATH + 'walk', (0, 0, 16, 16), True),
-            'jump_in': SpriteStripAnim(ASSETS_PATH + 'jump_in', (0, 0, 16, 16), False),
+            'jump_in': SpriteStripAnim(ASSETS_PATH + 'jump_in', (0, 0, 16, 16)),
             'jump': SpriteStripAnim(ASSETS_PATH + 'jump', (0, 0, 16, 16), True),
             'fall': SpriteStripAnim(ASSETS_PATH + 'fall', (0, 0, 16, 16), True),
-            'fall_out': SpriteStripAnim(ASSETS_PATH + 'fall_out', (0, 0, 16, 16), False),
+            'fall_out': SpriteStripAnim(ASSETS_PATH + 'fall_out', (0, 0, 16, 16))
         }
