@@ -34,8 +34,37 @@ class Level:
             for column_index, cell in enumerate(row):
                 x = column_index * TILE_SIZE
 
-                if cell == '1':
-                    Tile((x,y), self.visible_sprites, self.collision_sprites)
+                match cell:
+                    case '1':
+                        Tile('water/top', (x,y), self.visible_sprites)
+                    case '2':
+                        Tile('water/bubbles', (x,y), self.visible_sprites)
+                    case '3':
+                        Tile('water/deep', (x,y), self.visible_sprites)
+                    case '4':
+                        Tile('grass/left', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '5':
+                        Tile('grass/top', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '6': 
+                        Tile('grass/right', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '7':
+                        Tile('rock/left', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '8':
+                        Tile('rock/right', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '9':
+                        Tile('rock/full', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '10':
+                        Tile('rock/bot_left_air', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '11':
+                        Tile('rock/bot_right_air', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '12':
+                        Tile('rock/bot_air', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '13':
+                        Tile('rock/bot_left', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '14':
+                        Tile('rock/bot_right', (x,y), self.visible_sprites, self.collision_sprites)
+                    case '15':
+                        Tile('rock/bot', (x,y), self.visible_sprites, self.collision_sprites)
 
     def run(self):
 
