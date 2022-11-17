@@ -1,9 +1,10 @@
 import pygame
 from pygame.math import Vector2
 from settings import *
+from sprite_strip_anim import SpriteStripAnim
 
 
-STATUSES = ('idle', 'walk', 'jump', 'fall')
+ASSETS_PATH = 'gatito/assets/sprites/cat/'
 
 
 class Player(pygame.sprite.Sprite):
@@ -32,8 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.frame_index = 0
         self.frame_speed = 0.25 / FPS
 
-        if not self.load_assets():
-            raise Exception('Error loading character assets')
+        self.animations = self.load_assets()
 
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=topleft)
@@ -49,5 +49,12 @@ class Player(pygame.sprite.Sprite):
 
         self.colliders = colliders
 
-    def load_assets() -> bool:
-        ...
+    def load_assets() -> dict[str, SpriteStripAnim]:
+        return {
+            'idle': SpriteStripAnim(ASSETS_PATH + 'idle', (0, 0, 16, 16), True),
+            'walk': SpriteStripAnim(ASSETS_PATH + 'walk', (0, 0, 16, 16), True),
+            'jump_in': SpriteStripAnim(ASSETS_PATH + 'jump_in', (0, 0, 16, 16), False),
+            'jump': SpriteStripAnim(ASSETS_PATH + 'jump', (0, 0, 16, 16), True),
+            'fall': SpriteStripAnim(ASSETS_PATH + 'fall', (0, 0, 16, 16), True),
+            'fall_out': SpriteStripAnim(ASSETS_PATH + 'fall_out', (0, 0, 16, 16), False),
+        }
