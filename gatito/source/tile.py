@@ -6,7 +6,8 @@ class Tile(pygame.sprite.Sprite):
                  *groups: pygame.sprite.AbstractGroup) -> None:
         super().__init__(*groups)
 
-        self.image = pygame.image.load(f'/gatito/assets/sprites/tiles/{type}').convert()
+        self.image = pygame.image.load(
+            f'/gatito/assets/sprites/tiles/{type}').convert()
         self.rect = self.image.get_rect()
 
 
