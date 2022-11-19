@@ -4,6 +4,7 @@ from settings import *
 from tile import Tile
 from item import Item
 from player import Player
+from item import Item
 
 
 class Level:
