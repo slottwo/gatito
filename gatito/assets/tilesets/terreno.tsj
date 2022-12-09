@@ -1,0 +1,14 @@
+{ "columns":5,
+ "image":"..\/ase\/Tileset.png",
+ "imageheight":85,
+ "imagewidth":85,
+ "margin":1,
+ "name":"Terreno",
+ "spacing":1,
+ "tilecount":25,
+ "tiledversion":"1.9.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.9"
+}
