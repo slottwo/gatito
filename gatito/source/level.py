@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from tools import loadmap
 # from debug import debug
 from tile import Tile
 from item import Item
@@ -8,7 +9,7 @@ from item import Item
 
 
 class Level:
-    def __init__(self, level_map: list[str] = TILE_MAP) -> None:
+    def __init__(self, level_id: int) -> None:
         """Create and load the entire game (level)
         Args:
             level_map (list[str], optional): Matrix of tile and entities. Defaults to LEVEL_MAP.
@@ -22,16 +23,19 @@ class Level:
         self.active_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
 
-        self.setup_level(level_map)
+        self.setup_level(level_id)
 
-    def setup_level(self, level_map: list[str]) -> None:
+    def setup_level(self, level_id: int) -> None:
         """Instantiate and associate the tiles and entities
 
         Args:
             level_map (list[str]):  Matrix of tiles and entities on in their respective positions.
         """
-
-        for line_row, row in enumerate(level_map):
+        
+        level_map = loadmap(level_id)
+        
+        """
+        for line_row, row in enumerate(level_id):
             y = line_row * TILE_SIZE
             for column_index, cell in enumerate(row):
                 x = column_index * TILE_SIZE
@@ -96,7 +100,7 @@ class Level:
                              self.active_sprites)
                     case 22:
                         Player((x, y), self.visible_sprites,
-                                self.active_sprites)
+                                self.active_sprites)"""
 
     def run(self):
 
