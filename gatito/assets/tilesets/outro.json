@@ -1,0 +1,14 @@
+{ "columns":2,
+ "image":"outro.png",
+ "imageheight":67,
+ "imagewidth":33,
+ "margin":0,
+ "name":"outro",
+ "spacing":1,
+ "tilecount":8,
+ "tiledversion":"1.9.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.9"
+}
