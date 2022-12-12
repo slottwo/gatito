@@ -3,7 +3,8 @@ import pygame
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, type: str, topleft: tuple[int],
-                 *groups: pygame.sprite.AbstractGroup) -> None:
+                 *groups: pygame.sprite.AbstractGroup,
+                 opacity: float = 1) -> None:
         super().__init__(*groups)
 
         self.image = pygame.image.load(

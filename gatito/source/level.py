@@ -1,6 +1,10 @@
 import pygame
 # from debug import debug
 from map import Map
+from tile import Tile
+from item import Item
+from player import Player
+from settings import *
 
 
 class Level:
@@ -26,8 +30,37 @@ class Level:
         Args:
             level_id: ...
         """
-
         self.map = Map(level_id, self)
+        for layer in self.map.data['layers']:
+            if layer['visible']:
+                if layer['type'] == 'tilelayer':
+                    for index, id in enumerate(layer['data']):
+                        if TILE_DICT[id][0] == 'water':
+                            Tile(TILE_DICT[id],
+                                 (int(index % SCREEN_WIDTH) * TILE_SIZE,
+                                 int(index / SCREEN_WIDTH) * TILE_SIZE),
+                                 self.visible_sprites,
+                                 opacity=layer['opacity'])
+                        else:
+                            Tile(TILE_DICT[id],
+                                 (int(index % SCREEN_WIDTH) * TILE_SIZE,
+                                 int(index / SCREEN_WIDTH) * TILE_SIZE),
+                                 self.collision_sprites, self.visible_sprites,
+                                 opacity=layer['opacity'])
+                elif layer['type'] == 'objectgroup':
+                    for entity in layer['objects']:
+                        if entity['class'] == 'Cloud':
+                            ...
+                        if entity['class'] == 'CloudPinky':
+                            ...
+                        if entity['class'] == 'Fish':
+                            Item('fish', (entity['x'], entity['y']), 8,
+                                 self.visible_sprites, 
+                                 self.collision_sprites)
+                        if entity['class'] == 'Player':
+                            Player((entity['x'], entity['y']),
+                                   self.visible_sprites, 
+                                   self.collision_sprites)
 
     def run(self):
 
