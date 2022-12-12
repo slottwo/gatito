@@ -19,11 +19,11 @@ class Game:
         # Pygame setup
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode(SCREEN_RESOLUTION)
         pygame.display.set_caption('Gatito')
 
         # Level setup
-        self.level = Level()
+        self.level = Level(1)
 
     def run(self) -> None:
         """Start the game loop.

@@ -1,11 +1,6 @@
 import pygame
-from settings import *
-from tools import loadmap
 # from debug import debug
-from tile import Tile
-from item import Item
-from player import Player
-from item import Item
+from map import Map
 
 
 class Level:
@@ -29,10 +24,10 @@ class Level:
         """Instantiate and associate the tiles and entities
 
         Args:
-            level_map (list[str]):  Matrix of tiles and entities on in their respective positions.
+            level_id: ...
         """
 
-        level_map = loadmap(level_id)
+        self.map = Map(level_id, self)
 
     def run(self):
 

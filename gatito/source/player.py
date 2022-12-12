@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
 
         self.colliders = colliders
 
-    def load_assets() -> dict[str, SpriteStripAnim]:
+    def load_assets(self) -> dict[str, SpriteStripAnim]:
         """_summary_
 
         Returns:
